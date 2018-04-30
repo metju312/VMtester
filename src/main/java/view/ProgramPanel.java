@@ -1,16 +1,20 @@
 package view;
 
 import net.miginfocom.swing.MigLayout;
-import view.controller.Program;
+import controller.Program;
 import view.util.TitledBorderPanel;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 public class ProgramPanel extends TitledBorderPanel {
     public Program program;
     public JButton loadProgramButton;
+    public JLabel programNameLabel = new JLabel();
+    public JLabel programTypeLabel = new JLabel();
+    public JLabel programPathLabel = new JLabel();
     public ProgramPanel(String name) {
         super(name);
         setLayout(new MigLayout());
@@ -18,24 +22,33 @@ public class ProgramPanel extends TitledBorderPanel {
     }
 
     private void refreshPanel() {
-        setProgram();
         loadProgramButton = new JButton("Wczytaj program");
         loadProgramButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                System.out.println("btn");
+                JFileChooser fileChooser = new JFileChooser();
+                int returnValue = fileChooser.showOpenDialog(null);
+                if (returnValue == JFileChooser.APPROVE_OPTION) {
+                    File file = fileChooser.getSelectedFile();
+                    setProgram(file);
+                }
             }
         });
         add(loadProgramButton, "span");
         add(new JLabel("Nazwa:"));
-        add(new JLabel(program.name), "wrap");
+        add(programNameLabel, "wrap");
         add(new JLabel("Typ:"));
-        add(new JLabel(program.type), "wrap");
-        add(new JLabel(""));
+        add(programTypeLabel, "wrap");
+        add(new JLabel("Path:"));
+        add(programPathLabel, "wrap");
+
+        setProgram(new File("C:\\Users\\Matthew\\mgr\\support-tools.jar"));
     }
 
-    private void setProgram() {
-        //TODO Pobrane z pliku
-        program = new Program("Java Advanced Benchmark");
-        program.type = "jar";
+    private void setProgram(File file) {
+        System.out.println(file.getName());
+        program = new Program(file);
+        programNameLabel.setText(program.name);
+        programTypeLabel.setText(program.type);
+        programPathLabel.setText(program.path);
     }
 }
