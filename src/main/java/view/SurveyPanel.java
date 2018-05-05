@@ -10,8 +10,10 @@ import java.util.List;
 public class SurveyPanel extends JPanel {
 
     public List<ExperimentPanel> experimentPanelList = new ArrayList<ExperimentPanel>();
+    private MainWindow mainWindow;
 
-    public SurveyPanel() {
+    public SurveyPanel(MainWindow mainWindow) {
+        this.mainWindow = mainWindow;
         setLayout(new MigLayout());
         refreshPanel();
     }
@@ -33,8 +35,8 @@ public class SurveyPanel extends JPanel {
 
     private void setExperimentPanelList() {
         //TODO zrobić default 1 experyment z możliwością dodawania kolejnych
-        for (int i = 0; i < 10; i++) {
-            experimentPanelList.add(new ExperimentPanel("Eksperyment " + (i+1)));
+        for (int i = 0; i < 3; i++) {
+            experimentPanelList.add(new ExperimentPanel("Eksperyment " + (i+1), mainWindow));
         }
 
         for (ExperimentPanel experimentPanel : experimentPanelList) {

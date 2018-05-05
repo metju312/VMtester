@@ -1,5 +1,7 @@
 package view;
 
+import net.miginfocom.swing.MigLayout;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -13,8 +15,9 @@ public class MainWindow extends JFrame {
 
     private ProgramPanel programPanel = new ProgramPanel("Badany program");
     private JScrollPane programScrollPane = new JScrollPane(programPanel);
-    private SurveyPanel surveyPanel = new SurveyPanel();
+    private SurveyPanel surveyPanel = new SurveyPanel(this);
     private JScrollPane surveyScrollPane = new JScrollPane(surveyPanel);
+    private TablePanel tablePanel = new TablePanel(surveyPanel);
     private FooterPanel footerPanel = new FooterPanel();
 
     private int mainWindowWidth = 1300;
@@ -40,7 +43,11 @@ public class MainWindow extends JFrame {
     private void setPanels() {
         add(programScrollPane, BorderLayout.NORTH);
         add(surveyScrollPane, BorderLayout.CENTER);
-        add(footerPanel, BorderLayout.SOUTH);
+        JPanel bottomPanel = new JPanel();
+        bottomPanel. setLayout(new MigLayout("fill, insets 0"));
+        bottomPanel.add(tablePanel, "grow, wrap");
+        bottomPanel.add(footerPanel, "grow");
+        add(bottomPanel, BorderLayout.SOUTH);
     }
 
     private void setMenu() {
@@ -114,5 +121,9 @@ public class MainWindow extends JFrame {
         } catch (UnsupportedLookAndFeelException e) {
             e.printStackTrace();
         }
+    }
+
+    public void refreshTable(){
+        tablePanel.refreshPanel();
     }
 }
