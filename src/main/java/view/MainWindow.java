@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.util.logging.Logger;
 
 public class MainWindow extends JFrame {
@@ -17,8 +18,10 @@ public class MainWindow extends JFrame {
     private JScrollPane programScrollPane = new JScrollPane(programPanel);
     private SurveyPanel surveyPanel = new SurveyPanel(this);
     private JScrollPane surveyScrollPane = new JScrollPane(surveyPanel);
-    private TablePanel tablePanel = new TablePanel(surveyPanel);
+    public TablePanel tablePanel = new TablePanel(surveyPanel);
     private FooterPanel footerPanel = new FooterPanel();
+
+    private String IMPORT_EXPERIMENT_PATH = "C:\\Magister\\VMtester\\results";
 
     private int mainWindowWidth = 1300;
     private int mainWindowHeight = 800;
@@ -68,7 +71,22 @@ public class MainWindow extends JFrame {
         JMenuItem settings = new JMenuItem("Ustawienia", settingsIcon);
         JMenuItem exit = new JMenuItem("Wyjdź", exitIcon);
         JMenuItem newExperiment = new JMenuItem("Nowy eksperyment");
+        newExperiment.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                surveyPanel.addExperiment();
+            }
+        });
         JMenuItem importExperiment = new JMenuItem("Importuj eksperyment");
+        importExperiment.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser = new JFileChooser(IMPORT_EXPERIMENT_PATH);
+                int returnValue = fileChooser.showOpenDialog(null);
+                if (returnValue == JFileChooser.APPROVE_OPTION) {
+                    File file = fileChooser.getSelectedFile();
+                    surveyPanel.importExperiment(file);
+                }
+            }
+        });
         exit.setMnemonic(KeyEvent.VK_W);
         exit.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_W, ActionEvent.CTRL_MASK));
         exit.addActionListener(new ActionListener() {
@@ -125,5 +143,9 @@ public class MainWindow extends JFrame {
 
     public void refreshTable(){
         tablePanel.refreshPanel();
+    }
+
+    public void importExperiment(){
+
     }
 }

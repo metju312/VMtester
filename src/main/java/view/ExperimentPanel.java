@@ -10,6 +10,8 @@ import org.hyperic.sigar.ptql.ProcessFinder;
 import view.util.TitledBorderPanel;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -43,7 +45,10 @@ public class ExperimentPanel extends TitledBorderPanel {
     }
 
     private void refreshPanel() {
+        removeAll();
         setSettingsPanel();
+        revalidate();
+        repaint();
     }
 
     private void setSettingsPanel() {
@@ -51,6 +56,20 @@ public class ExperimentPanel extends TitledBorderPanel {
 
 
         settingsPanel.add(new JLabel("Nazwa eksperymentu:"));
+        experimentNameTextField.getDocument().addDocumentListener(new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) {
+                experiment.name = experimentNameTextField.getText();
+                refreshExperiment();
+            }
+
+            public void removeUpdate(DocumentEvent e) {
+                experiment.name = experimentNameTextField.getText();
+                refreshExperiment();
+            }
+
+            public void changedUpdate(DocumentEvent e) {
+            }
+        });
         settingsPanel.add(experimentNameTextField, "wrap");
 
 
@@ -59,9 +78,11 @@ public class ExperimentPanel extends TitledBorderPanel {
         final JComboBox comboBox = new JComboBox(virtualizationMethods);
         comboBox.setSelectedIndex(0);
         experiment.name = comboBox.getSelectedItem().toString();
+        experimentNameTextField.setText(experiment.name);
         comboBox.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
                 experiment.name = comboBox.getSelectedItem().toString();
+                experiment.methodName = comboBox.getSelectedItem().toString();
                 experimentNameTextField.setText(experiment.name);
                 experiment.processName = "idea.exe";
                 Long pid = null;
@@ -81,7 +102,7 @@ public class ExperimentPanel extends TitledBorderPanel {
                 System.out.println("Start experiment using: " + (String)comboBox.getSelectedItem());
                 try {
                     //executeScript();
-                    getProcessInfo("Steam.exe");
+                    getProcessInfo("idea.exe");
                 } catch (Exception e1) {
                     e1.printStackTrace();
                 }
@@ -98,6 +119,12 @@ public class ExperimentPanel extends TitledBorderPanel {
         settingsPanel.add(exportExperiment, "span");
 
         add(settingsPanel, BorderLayout.CENTER);
+    }
+
+    private void refreshTable() {
+        if(mainWindow.tablePanel != null){
+            mainWindow.refreshTable();
+        }
     }
 
     private void executeScript() throws IOException {
@@ -239,7 +266,7 @@ public class ExperimentPanel extends TitledBorderPanel {
 
     private void endExperiment() {
         experiment.averageRamUsage = calculateAverage(experiment.ramUsageList);
-        mainWindow.refreshTable();
+        refreshTable();
     }
 
     private double calculateAverage(List<Integer> values) {
@@ -251,5 +278,15 @@ public class ExperimentPanel extends TitledBorderPanel {
             return sum.doubleValue() / values.size();
         }
         return sum;
+    }
+
+    public void importExperiment(Experiment experiment){
+        this.experiment = experiment;
+        experimentNameTextField.setText(experiment.name);
+        refreshExperiment();
+    }
+
+    public void refreshExperiment(){
+        refreshTable();
     }
 }

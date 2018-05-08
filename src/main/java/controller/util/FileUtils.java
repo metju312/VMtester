@@ -23,16 +23,15 @@ public class FileUtils {
         }
     }
 
-    public static Experiment importExperimentFromFile() {
+    public static Experiment importExperimentFromFile(File file) {
         ObjectMapper mapper = new ObjectMapper();
         Experiment experiment = null;
-//        try {
-////            Experiment experiment = mapper.readValue(file, Artist.class);
-////            System.out.println("newArtist.getId() = " + newArtist.getId());
-////            System.out.println("newArtist.getName() = " + newArtist.getName());
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            experiment = mapper.readValue(file, Experiment.class);
+            System.out.println("Import experiment: " + experiment.name);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return experiment;
     }
 

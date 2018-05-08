@@ -1,9 +1,12 @@
 package view;
 
+import controller.Experiment;
+import controller.util.FileUtils;
 import net.miginfocom.swing.MigLayout;
 import view.util.TitledBorderPanel;
 
 import javax.swing.*;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,10 +29,6 @@ public class SurveyPanel extends JPanel {
     private void setAddNewExperimentPanel() {
         JPanel panel = new JPanel();
         panel.setLayout(new MigLayout());
-        JButton newExperimentButton = new JButton("Dodaj eksperyment");
-        JButton importExperimentButton = new JButton("Importuj eksperyment");
-        panel.add(newExperimentButton, "wrap");
-        panel.add(importExperimentButton);
         add(panel);
     }
 
@@ -42,5 +41,18 @@ public class SurveyPanel extends JPanel {
         for (ExperimentPanel experimentPanel : experimentPanelList) {
             add(experimentPanel);
         }
+    }
+
+    public void importExperiment(File file){
+        Experiment experiment = FileUtils.importExperimentFromFile(file);
+        ExperimentPanel experimentPanel = addExperiment();
+        experimentPanel.importExperiment(experiment);
+    }
+
+    public ExperimentPanel addExperiment(){
+        ExperimentPanel experimentPanel = new ExperimentPanel("Eksperyment " + (experimentPanelList.size()+1), mainWindow);
+        experimentPanelList.add(experimentPanel);
+        add(experimentPanel);
+        return experimentPanel;
     }
 }
