@@ -106,9 +106,10 @@ public class TablePanel extends JPanel {
     private ChartPanel createChart(String chartName, String xName, String yName) {
         XYDataset roiData = createDataset();
         JFreeChart chart = ChartFactory.createXYLineChart(chartName, xName, yName, roiData, PlotOrientation.VERTICAL, true, true, false);
-//        XYPlot plot = chart.getXYPlot();
-//        XYLineAndShapeRenderer renderer = (XYLineAndShapeRenderer) plot.getRenderer();
-//        renderer.setBaseShapesVisible(true);
+
+        XYPlot plot = chart.getXYPlot();
+        XYLineAndShapeRenderer renderer = (XYLineAndShapeRenderer) plot.getRenderer();
+        renderer.setBaseShapesVisible(true);
 //        NumberFormat currency = NumberFormat.getCurrencyInstance();
 //        currency.setMaximumFractionDigits(0);
 //        NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
@@ -130,14 +131,14 @@ public class TablePanel extends JPanel {
         for (ExperimentPanel experimentPanel : surveyPanel.experimentPanelList) {
             Experiment experiment = experimentPanel.experiment;
             XYSeries series = new XYSeries(experiment.name);
-
+            System.out.println(chartDataType);
             if (chartDataType.equals("ram")) {
                 for (int i = 0; i < experiment.ramUsageList.size(); i++) {
                     series.add(i, experiment.ramUsageList.get(i));
                 }
             } else if (chartDataType.equals("cpu")) {
-                for (int i = 0; i < experiment.ramUsageList.size(); i++) {
-                    series.add(i, experiment.ramUsageList.get(i));
+                for (int i = 0; i < experiment.cpuUsageList.size(); i++) {
+                    series.add(i, experiment.cpuUsageList.get(i));
                 }
             } else {
                 for (int i = 0; i < experiment.ramUsageList.size(); i++) {

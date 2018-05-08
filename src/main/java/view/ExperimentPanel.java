@@ -191,7 +191,7 @@ public class ExperimentPanel extends TitledBorderPanel {
         SigarProxy sigar=SigarProxyCache.newInstance(sigarImpl,1);
 
         try {
-            for(int j = 0; j <= 4; j++) {
+            for(int j = 0; j <= 8; j++) {
                 Shell.clearScreen();
 //                System.out.println(sigar.getProcStat().toString());
 //                System.out.println(sigar.getCpuPerc());
@@ -222,7 +222,7 @@ public class ExperimentPanel extends TitledBorderPanel {
                     System.out.println(Ps.join(info));
                 }
                 try {
-                    Thread.sleep(2000);
+                    Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -240,7 +240,9 @@ public class ExperimentPanel extends TitledBorderPanel {
         Sigar sigarImpl=new Sigar();
         SigarProxy sigar=SigarProxyCache.newInstance(sigarImpl,1);
         ProcessFinder processFinder = new ProcessFinder(sigar);
-        for(int j = 0; j <= 4; j++){
+        experiment.ramUsageList = new ArrayList<Integer>();
+        experiment.cpuUsageList = new ArrayList<Double>();
+        for(int j = 0; j <= 6; j++){
             Shell.clearScreen();
             String cpuPerc="?";
             java.util.List info;
@@ -257,25 +259,43 @@ public class ExperimentPanel extends TitledBorderPanel {
             System.out.println(sigar.getProcMem(pid).getSize());
             System.out.println(sigar.getProcMem(pid).getSize());
 
-            experiment.ramUsageList.add((int) sigar.getProcMem(pid).getSize()/1000);
+            System.out.println(cpuPerc);
+            System.out.println(cpu.getPercent());
+            System.out.println();
 
-            Thread.sleep(1000);
+
+            experiment.ramUsageList.add((int) sigar.getProcMem(pid).getSize()/1000);
+            experiment.cpuUsageList.add(cpu.getPercent()*100);
+
+            Thread.sleep(500);
         }
         endExperiment();
     }
 
     private void endExperiment() {
-        experiment.averageRamUsage = calculateAverage(experiment.ramUsageList);
+        experiment.averageRamUsage = calculateAverageFromIntegers(experiment.ramUsageList);
+        experiment.averageCpuUsage = calculateAverageFromDoubles(experiment.cpuUsageList);
         refreshTable();
     }
 
-    private double calculateAverage(List<Integer> values) {
+    private double calculateAverageFromIntegers(List<Integer> values) {
         Integer sum = 0;
         if(!values.isEmpty()) {
             for (Integer value : values) {
                 sum += value;
             }
             return sum.doubleValue() / values.size();
+        }
+        return sum;
+    }
+
+    private double calculateAverageFromDoubles(List<Double> values) {
+        Double sum = 0d;
+        if(!values.isEmpty()) {
+            for (Double value : values) {
+                sum += value;
+            }
+            return sum / values.size();
         }
         return sum;
     }
