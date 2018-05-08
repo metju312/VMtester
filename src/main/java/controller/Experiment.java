@@ -18,6 +18,7 @@ public class Experiment {
     private ExperimentSettings experimentSettings;
     private ExperimentResults experimentResults;
     public List<Integer> ramUsageList = new ArrayList<Integer>();
+    public List<Double> cpuUsageList = new ArrayList<Double>();
 
     public Experiment() {
     }
