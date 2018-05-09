@@ -247,7 +247,8 @@ public class ExperimentPanel extends TitledBorderPanel {
             Shell.clearScreen();
             String cpuPerc="?";
             java.util.List info;
-            long pid = processFinder.findSingleProcess("Exe.Name.ct=" + processName);
+//            long pid = processFinder.findSingleProcess("Exe.Name.ct=" + processName);
+            long pid = 16012;
             System.out.println(pid);
             info= Ps.getInfo(sigar,pid);
             ProcCpu cpu=sigar.getProcCpu(pid);
@@ -265,8 +266,8 @@ public class ExperimentPanel extends TitledBorderPanel {
             System.out.println();
 
 
-            experiment.ramUsageList.add((int) sigar.getProcMem(pid).getSize()/1000);
-            experiment.cpuUsageList.add(cpu.getPercent()*100);
+            experiment.ramUsageList.add((int) (sigar.getProcMem(pid).getSize()/1000));
+            experiment.cpuUsageList.add(cpu.getPercent()*10);
 
             Thread.sleep(500);
         }

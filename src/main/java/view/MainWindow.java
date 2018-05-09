@@ -23,8 +23,8 @@ public class MainWindow extends JFrame {
 
     private String IMPORT_EXPERIMENT_PATH = "C:\\Magister\\VMtester\\results";
 
-    private int mainWindowWidth = 1300;
-    private int mainWindowHeight = 800;
+    private int mainWindowWidth = 1000;
+    private int mainWindowHeight = 660;
 
 
     public static MainWindow getInstance() {
