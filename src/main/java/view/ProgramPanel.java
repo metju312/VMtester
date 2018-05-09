@@ -41,7 +41,8 @@ public class ProgramPanel extends TitledBorderPanel {
         add(new JLabel("Path:"));
         add(programPathLabel, "wrap");
 
-        setProgram(new File("C:\\Users\\Matthew\\mgr\\support-tools.jar"));
+//        setProgram(new File("C:\\Users\\Matthew\\mgr\\support-tools.jar"));
+        setProgram(new File("C:\\Users\\Matthew\\mgr\\ram-usage-program.jar"));
     }
 
     private void setProgram(File file) {

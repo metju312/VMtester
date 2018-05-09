@@ -101,8 +101,9 @@ public class ExperimentPanel extends TitledBorderPanel {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Start experiment using: " + (String)comboBox.getSelectedItem());
                 try {
-                    //executeScript();
+                    executeScript();
                     getProcessInfo("idea.exe");
+//                    getProcessInfo("VirtualBox.exe");
                 } catch (Exception e1) {
                     e1.printStackTrace();
                 }
@@ -128,9 +129,9 @@ public class ExperimentPanel extends TitledBorderPanel {
     }
 
     private void executeScript() throws IOException {
-//        Runtime rt = Runtime.getRuntime();
-//        String[] commands = {"ping.exe","google.com"};
-//        Process proc = rt.exec(commands);
+        Runtime rt = Runtime.getRuntime();
+        String[] commands = {"C:\\Users\\Matthew\\mgr\\fedora.bat"};
+        Process proc = rt.exec(commands);
 //
 //        BufferedReader stdInput = new BufferedReader(new
 //                InputStreamReader(proc.getInputStream()));
@@ -186,51 +187,51 @@ public class ExperimentPanel extends TitledBorderPanel {
 //            e.printStackTrace();
 //        }
 
-
-        Sigar sigarImpl=new Sigar();
-        SigarProxy sigar=SigarProxyCache.newInstance(sigarImpl,1);
-
-        try {
-            for(int j = 0; j <= 8; j++) {
-                Shell.clearScreen();
-//                System.out.println(sigar.getProcStat().toString());
-//                System.out.println(sigar.getCpuPerc());
-//                System.out.println(sigar.getMem());
-//                System.out.println(sigar.getSwap());
-                System.out.println();
-                System.out.println();
-                System.out.println();
-                String[] args = {"12512","10192"};
-                long[] pids=Shell.getPids(sigar,args);
-                for (int i=0; i < pids.length; i++) {
-                    long pid=pids[i];
-                    String cpuPerc="?";
-                    java.util.List info;
-                    try {
-                        info= Ps.getInfo(sigar,pid);
-                    }
-                    catch (      SigarException e) {
-                        continue;
-                    }
-                    try {
-                        ProcCpu cpu=sigar.getProcCpu(pid);
-                        cpuPerc=CpuPerc.format(cpu.getPercent());
-                    }
-                    catch (      SigarException e) {
-                    }
-                    info.add(info.size() - 1,cpuPerc);
-                    System.out.println(Ps.join(info));
-                }
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                SigarProxyCache.clear(sigar);
-            }
-        } catch (SigarException e) {
-            e.printStackTrace();
-        }
+//
+//        Sigar sigarImpl=new Sigar();
+//        SigarProxy sigar=SigarProxyCache.newInstance(sigarImpl,1);
+//
+//        try {
+//            for(int j = 0; j <= 8; j++) {
+//                Shell.clearScreen();
+////                System.out.println(sigar.getProcStat().toString());
+////                System.out.println(sigar.getCpuPerc());
+////                System.out.println(sigar.getMem());
+////                System.out.println(sigar.getSwap());
+//                System.out.println();
+//                System.out.println();
+//                System.out.println();
+//                String[] args = {"12512","10192"};
+//                long[] pids=Shell.getPids(sigar,args);
+//                for (int i=0; i < pids.length; i++) {
+//                    long pid=pids[i];
+//                    String cpuPerc="?";
+//                    java.util.List info;
+//                    try {
+//                        info= Ps.getInfo(sigar,pid);
+//                    }
+//                    catch (      SigarException e) {
+//                        continue;
+//                    }
+//                    try {
+//                        ProcCpu cpu=sigar.getProcCpu(pid);
+//                        cpuPerc=CpuPerc.format(cpu.getPercent());
+//                    }
+//                    catch (      SigarException e) {
+//                    }
+//                    info.add(info.size() - 1,cpuPerc);
+//                    System.out.println(Ps.join(info));
+//                }
+//                try {
+//                    Thread.sleep(1000);
+//                } catch (InterruptedException e) {
+//                    e.printStackTrace();
+//                }
+//                SigarProxyCache.clear(sigar);
+//            }
+//        } catch (SigarException e) {
+//            e.printStackTrace();
+//        }
 
 
     }
