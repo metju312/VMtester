@@ -55,6 +55,7 @@ public class MainWindow extends JFrame {
             surveyPanel.refreshPanel();
             tablePanel.refreshPanel();
         }
+        programPanel.refreshPanel();
     }
 
     private void setPanels() {

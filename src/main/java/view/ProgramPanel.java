@@ -23,10 +23,8 @@ public class ProgramPanel extends TitledBorderPanel {
         refreshPanel();
     }
 
-    private void refreshPanel() {
+    public void refreshPanel() {
         removeAll();
-        revalidate();
-        repaint();
         loadProgramButton = new JButton("Wczytaj program");
         loadProgramButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
