@@ -2,6 +2,8 @@ package controller.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import controller.Experiment;
+import view.ExperimentPanel;
+import view.SurveyPanel;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -23,6 +25,22 @@ public class FileUtils {
         }
     }
 
+    public static void exportSurveyToFile(Survey survey, String fileName) {
+        ObjectMapper mapper = new ObjectMapper();
+        if (fileName.length() >= 6) {
+            if(fileName.substring(fileName.length() - 5).equals(".json")){
+                fileName = fileName.substring(0, fileName.length() - 5);
+            }
+        }
+        survey.name = fileName;
+        File file = new File("results/survey/" + survey.name + ".json");
+        try {
+            mapper.writeValue(file, survey);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static Experiment importExperimentFromFile(File file) {
         ObjectMapper mapper = new ObjectMapper();
         Experiment experiment = null;
@@ -33,6 +51,18 @@ public class FileUtils {
             e.printStackTrace();
         }
         return experiment;
+    }
+
+    public static Survey importSurveyFromFile(File file) {
+        ObjectMapper mapper = new ObjectMapper();
+        Survey survey = null;
+        try {
+            survey = mapper.readValue(file, Survey.class);
+            System.out.println("Import survey: " + survey.name);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return survey;
     }
 
     public static String fromCalendar(final Calendar calendar) {

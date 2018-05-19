@@ -34,12 +34,13 @@ public class ExperimentPanel extends TitledBorderPanel {
     SigarProxy sigar=SigarProxyCache.newInstance(sigarImpl,1);
     ProcessFinder processFinder = new ProcessFinder(sigar);
 
-    public Experiment experiment = new Experiment();
-    private MainWindow mainWindow;
+    public Experiment experiment;
+    public MainWindow mainWindow;
 
-    public ExperimentPanel(String name, MainWindow mainWindow) {
+    public ExperimentPanel(String name, MainWindow mainWindow, Experiment experiment) {
         super(name);
         this.mainWindow = mainWindow;
+        this.experiment = experiment;
         setLayout(new BorderLayout());
         refreshPanel();
     }
@@ -248,7 +249,7 @@ public class ExperimentPanel extends TitledBorderPanel {
             String cpuPerc="?";
             java.util.List info;
 //            long pid = processFinder.findSingleProcess("Exe.Name.ct=" + processName);
-            long pid = 16012;
+            long pid = 10800;
             System.out.println(pid);
             info= Ps.getInfo(sigar,pid);
             ProcCpu cpu=sigar.getProcCpu(pid);

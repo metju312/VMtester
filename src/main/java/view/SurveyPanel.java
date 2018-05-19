@@ -2,6 +2,7 @@ package view;
 
 import controller.Experiment;
 import controller.util.FileUtils;
+import controller.util.Survey;
 import net.miginfocom.swing.MigLayout;
 import view.util.TitledBorderPanel;
 
@@ -10,20 +11,26 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SurveyPanel extends JPanel {
+import static controller.util.FileUtils.now;
 
+public class SurveyPanel extends JPanel {
+    public Survey survey = new Survey();
     public List<ExperimentPanel> experimentPanelList = new ArrayList<ExperimentPanel>();
-    private MainWindow mainWindow;
+    public MainWindow mainWindow;
 
     public SurveyPanel(MainWindow mainWindow) {
         this.mainWindow = mainWindow;
+        mainWindow.setTitleUsingSurveyName(survey.name);
         setLayout(new MigLayout());
         refreshPanel();
     }
 
     private void refreshPanel() {
+        removeAll();
         setExperimentPanelList();
         setAddNewExperimentPanel();
+        revalidate();
+        repaint();
     }
 
     private void setAddNewExperimentPanel() {
@@ -35,7 +42,13 @@ public class SurveyPanel extends JPanel {
     private void setExperimentPanelList() {
         //TODO zrobić default 1 experyment z możliwością dodawania kolejnych
         for (int i = 0; i < 3; i++) {
-            experimentPanelList.add(new ExperimentPanel("Eksperyment " + (i+1), mainWindow));
+            survey.experimentList.add(new Experiment("Docker"));
+        }
+
+        int i = 1;
+        for (Experiment experiment : survey.experimentList) {
+            experimentPanelList.add(new ExperimentPanel("Eksperyment " + i, mainWindow, experiment));
+            i++;
         }
 
         for (ExperimentPanel experimentPanel : experimentPanelList) {
@@ -45,14 +58,22 @@ public class SurveyPanel extends JPanel {
 
     public void importExperiment(File file){
         Experiment experiment = FileUtils.importExperimentFromFile(file);
+        survey.experimentList.add(experiment);
         ExperimentPanel experimentPanel = addExperiment();
         experimentPanel.importExperiment(experiment);
     }
 
     public ExperimentPanel addExperiment(){
-        ExperimentPanel experimentPanel = new ExperimentPanel("Eksperyment " + (experimentPanelList.size()+1), mainWindow);
+        Experiment experiment = new Experiment("Docker");
+        survey.experimentList.add(experiment);
+        ExperimentPanel experimentPanel = new ExperimentPanel("Eksperyment " + (experimentPanelList.size()+1), mainWindow, experiment);
         experimentPanelList.add(experimentPanel);
         add(experimentPanel);
         return experimentPanel;
+    }
+
+    public void importSurvey(Survey survey) {
+        this.survey = survey;
+        refreshPanel();
     }
 }

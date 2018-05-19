@@ -1,5 +1,7 @@
 package view;
 
+import controller.util.FileUtils;
+import controller.util.Survey;
 import net.miginfocom.swing.MigLayout;
 
 import javax.swing.*;
@@ -24,7 +26,7 @@ public class MainWindow extends JFrame {
     private String IMPORT_EXPERIMENT_PATH = "C:\\Magister\\VMtester\\results";
 
     private int mainWindowWidth = 1000;
-    private int mainWindowHeight = 660;
+    private int mainWindowHeight = 680;
 
 
     public static MainWindow getInstance() {
@@ -66,8 +68,25 @@ public class MainWindow extends JFrame {
         menu.setMnemonic(KeyEvent.VK_B);
         JMenuItem newTest = new JMenuItem("Nowe badanie", newIcon);
         JMenuItem openTest = new JMenuItem("Otwórz badanie", openIcon);
+        openTest.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser = new JFileChooser("C:\\Magister\\VMtester\\results\\survey");
+                if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                    File file = fileChooser.getSelectedFile();
+                    importSurvey(file);
+                }
+            }
+        });
         JMenuItem saveTest = new JMenuItem("Zapisz badanie", saveIcon);
-        JMenuItem importTest = new JMenuItem("Zaimportuj badanie");
+        saveTest.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser = new JFileChooser("C:\\Magister\\VMtester\\results\\survey");
+                fileChooser.setSelectedFile(new File(surveyPanel.survey.name + ".json"));
+                if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+                    FileUtils.exportSurveyToFile(surveyPanel.survey, fileChooser.getSelectedFile().getName());
+                }
+            }
+        });
         JMenuItem settings = new JMenuItem("Ustawienia", settingsIcon);
         JMenuItem exit = new JMenuItem("Wyjdź", exitIcon);
         JMenuItem newExperiment = new JMenuItem("Nowy eksperyment");
@@ -98,8 +117,6 @@ public class MainWindow extends JFrame {
         menu.add(openTest);
         menu.add(saveTest);
         menu.addSeparator();
-        menu.add(importTest);
-        menu.addSeparator();
         menu.add(settings);
         menu.addSeparator();
         menu.add(exit);
@@ -111,6 +128,11 @@ public class MainWindow extends JFrame {
         menuBar.add(menu);
         menuBar.add(survey);
         setJMenuBar(menuBar);
+    }
+
+    private void importSurvey(File file) {
+        Survey survey = FileUtils.importSurveyFromFile(file);
+        surveyPanel.importSurvey(survey);
     }
 
     private void setMainWindowValues() {
@@ -147,5 +169,9 @@ public class MainWindow extends JFrame {
 
     public void importExperiment(){
 
+    }
+
+    public void setTitleUsingSurveyName(String surveyName) {
+        setTitle("VMTester - " + surveyName);
     }
 }
