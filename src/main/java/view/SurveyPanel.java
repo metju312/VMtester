@@ -41,13 +41,6 @@ public class SurveyPanel extends JPanel {
     }
 
     private void setExperimentPanelList() {
-        if(survey.experimentList.size() == 0){
-            for (int i = 0; i < 2; i++) {
-                 survey.experimentList.add(new Experiment());
-            }
-            mainWindow.firstLaunch = false;
-        }
-
         int i = 1;
         for (Experiment experiment : survey.experimentList) {
             experimentPanelList.add(new ExperimentPanel("Eksperyment " + i, mainWindow, experiment));

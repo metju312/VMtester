@@ -22,9 +22,8 @@ public class MainWindow extends JFrame {
     private JScrollPane programScrollPane = new JScrollPane(programPanel);
     public SurveyPanel surveyPanel = new SurveyPanel(this);
     private JScrollPane surveyScrollPane = new JScrollPane(surveyPanel);
-    public TablePanel tablePanel = new TablePanel(surveyPanel);
+    public TablePanel tablePanel = new TablePanel(surveyPanel.survey);
     private FooterPanel footerPanel = new FooterPanel();
-    public boolean firstLaunch = true;
 
     private String IMPORT_EXPERIMENT_PATH = "C:\\Magister\\VMtester\\results";
 
@@ -46,6 +45,13 @@ public class MainWindow extends JFrame {
         setMenu();
         setPanels();
         //setLookAndFeel();
+
+        //dodanie 2 domyślnych eksperymentów
+        for (int i = 0; i < 2; i++) {
+            surveyPanel.survey.experimentList.add(new Experiment());
+            surveyPanel.refreshPanel();
+            tablePanel.refreshPanel();
+        }
     }
 
     private void setPanels() {

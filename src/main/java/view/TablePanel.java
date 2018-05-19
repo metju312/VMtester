@@ -1,17 +1,13 @@
 package view;
 
 import controller.Experiment;
+import controller.util.Survey;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.axis.NumberAxis;
-import org.jfree.chart.axis.NumberTickUnit;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.XYLineAndShapeRenderer;
-import org.jfree.data.time.TimeSeries;
-import org.jfree.data.time.TimeSeriesCollection;
-import org.jfree.data.time.Year;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
@@ -20,15 +16,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.text.NumberFormat;
 
 public class TablePanel extends JPanel {
 
-    private SurveyPanel surveyPanel;
+    private Survey survey;
     private String chartDataType = "ram";
 
-    public TablePanel(SurveyPanel surveyPanel) {
-        this.surveyPanel = surveyPanel;
+    public TablePanel(Survey survey) {
+        this.survey = survey;
         setLayout(new GridLayout());
         refreshPanel();
     }
@@ -41,25 +36,25 @@ public class TablePanel extends JPanel {
     }
 
     private void setTable() {
-        int columnsCount = surveyPanel.experimentPanelList.size();
+        int columnsCount = survey.experimentList.size();
         String[] columns = new String[columnsCount + 1];
         columns[0] = "Parametr";
         for (int i = 0; i < columnsCount; i++) {
-            columns[i + 1] = surveyPanel.experimentPanelList.get(i).experiment.name;
+            columns[i + 1] = survey.experimentList.get(i).name;
         }
 
         final Object[][] data = new Object[3][columnsCount + 1];
         data[0][0] = "Średnie użycie pamięci RAM [MB]";
         for (int i = 0; i < columnsCount; i++) {
-            data[0][i + 1] = surveyPanel.experimentPanelList.get(i).experiment.averageRamUsage;
+            data[0][i + 1] = survey.experimentList.get(i).averageRamUsage;
         }
         data[1][0] = "Średnie procentowe użycie CPU [%]";
         for (int i = 0; i < columnsCount; i++) {
-            data[1][i + 1] = surveyPanel.experimentPanelList.get(i).experiment.averageCpuUsage;
+            data[1][i + 1] = survey.experimentList.get(i).averageCpuUsage;
         }
         data[2][0] = "Średnie użycie sieci [MB/s]";
         for (int i = 0; i < columnsCount; i++) {
-            data[2][i + 1] = surveyPanel.experimentPanelList.get(i).experiment.averageNetworkUsage;
+            data[2][i + 1] = survey.experimentList.get(i).averageNetworkUsage;
         }
         final JTable table = new JTable(data, columns);
         table.addMouseListener(new MouseAdapter() {
@@ -128,8 +123,7 @@ public class TablePanel extends JPanel {
 
     private XYDataset createDataset() {
         XYSeriesCollection dataset = new XYSeriesCollection();
-        for (ExperimentPanel experimentPanel : surveyPanel.experimentPanelList) {
-            Experiment experiment = experimentPanel.experiment;
+        for (Experiment experiment : survey.experimentList) {
             XYSeries series = new XYSeries(experiment.name);
             System.out.println(chartDataType);
             if (chartDataType.equals("ram")) {
