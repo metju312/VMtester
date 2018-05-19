@@ -23,12 +23,12 @@ public class MainWindow extends JFrame {
     public String SURVEY_PATH = RESULTS_PATH + "\\survey";
     public String JARS_PATH = SOURCES_PATH + "\\jars";
 
-    private ProgramPanel programPanel = new ProgramPanel("Badany program", JARS_PATH);
-    private JScrollPane programScrollPane = new JScrollPane(programPanel);
     public SurveyPanel surveyPanel = new SurveyPanel(this);
     private JScrollPane surveyScrollPane = new JScrollPane(surveyPanel);
     public TablePanel tablePanel = new TablePanel(surveyPanel.survey);
     private FooterPanel footerPanel = new FooterPanel();
+    private ProgramPanel programPanel = new ProgramPanel("Badany program", JARS_PATH);
+    private JScrollPane programScrollPane = new JScrollPane(programPanel);
 
     private int mainWindowWidth = 1000;
     private int mainWindowHeight = 800;
@@ -43,11 +43,11 @@ public class MainWindow extends JFrame {
 
     private MainWindow() {
         super("VMTester");
+        setLookAndFeel();
         setMainWindowValues();
         setMainWindowLayout();
         setMenu();
         setPanels();
-        //setLookAndFeel();
 
         //dodanie 2 domyślnych eksperymentów
         for (int i = 0; i < 2; i++) {

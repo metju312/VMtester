@@ -24,14 +24,18 @@ public class ProgramPanel extends TitledBorderPanel {
     }
 
     private void refreshPanel() {
+        removeAll();
+        revalidate();
+        repaint();
         loadProgramButton = new JButton("Wczytaj program");
         loadProgramButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JFileChooser fileChooser = new JFileChooser();
+                JFileChooser fileChooser = new JFileChooser(defaultProgramsPath);
                 int returnValue = fileChooser.showOpenDialog(null);
                 if (returnValue == JFileChooser.APPROVE_OPTION) {
                     File file = fileChooser.getSelectedFile();
                     setProgram(file);
+                    refreshPanel();
                 }
             }
         });
@@ -46,6 +50,8 @@ public class ProgramPanel extends TitledBorderPanel {
 //        setProgram(new File("C:\\Users\\Matthew\\mgr\\support-tools.jar"));
         System.out.println(defaultProgramsPath);
         setProgram(new File(defaultProgramsPath + "\\ram-usage-program.jar"));
+        revalidate();
+        repaint();
     }
 
     private void setProgram(File file) {
