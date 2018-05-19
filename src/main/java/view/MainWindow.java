@@ -18,15 +18,16 @@ public class MainWindow extends JFrame {
 
     private ProgramPanel programPanel = new ProgramPanel("Badany program");
     private JScrollPane programScrollPane = new JScrollPane(programPanel);
-    private SurveyPanel surveyPanel = new SurveyPanel(this);
+    public SurveyPanel surveyPanel = new SurveyPanel(this);
     private JScrollPane surveyScrollPane = new JScrollPane(surveyPanel);
     public TablePanel tablePanel = new TablePanel(surveyPanel);
     private FooterPanel footerPanel = new FooterPanel();
+    public boolean firstLaunch = true;
 
     private String IMPORT_EXPERIMENT_PATH = "C:\\Magister\\VMtester\\results";
 
     private int mainWindowWidth = 1000;
-    private int mainWindowHeight = 680;
+    private int mainWindowHeight = 800;
 
 
     public static MainWindow getInstance() {
@@ -94,6 +95,7 @@ public class MainWindow extends JFrame {
         newExperiment.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 surveyPanel.addExperiment();
+                surveyPanel.refreshPanel();
             }
         });
         JMenuItem importExperiment = new JMenuItem("Importuj eksperyment");

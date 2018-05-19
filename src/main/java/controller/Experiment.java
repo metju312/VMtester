@@ -13,8 +13,10 @@ public class Experiment {
     public Double averageRamUsage = 0d;
     public Double averageCpuUsage = 0d;
     public Double averageNetworkUsage = 0d;
-    public String processName ="";
+    public String processName = "";
     public Long processPID = 0l;
+    public String guestIp = "localhost";
+    public String programExeName = "VirtualBox.exe";
     private ExperimentSettings experimentSettings;
     private ExperimentResults experimentResults;
     public List<Integer> ramUsageList = new ArrayList<Integer>();

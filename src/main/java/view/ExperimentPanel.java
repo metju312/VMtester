@@ -17,17 +17,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.*;
 import java.util.List;
 
 public class ExperimentPanel extends TitledBorderPanel {
 
     private JTextField experimentNameTextField = new JTextField();
+    private JTextField experimentPidTextField = new JTextField();
+    private JTextField experimentGuestIpTextField = new JTextField();
+    JComboBox comboBox;
     private TitledBorderPanel settingsPanel = new TitledBorderPanel("Ustawienia");
-    private TitledBorderPanel resultsPanel = new TitledBorderPanel("Wyniki");
+    private TitledBorderPanel actionsPanel = new TitledBorderPanel("Akcje");
     private String[] virtualizationMethods = { "VirtualBox", "VMware", "Docker" };
 
     Sigar sigarImpl=new Sigar();
@@ -48,35 +49,17 @@ public class ExperimentPanel extends TitledBorderPanel {
     private void refreshPanel() {
         removeAll();
         setSettingsPanel();
+        setActionsPanel();
         revalidate();
         repaint();
     }
 
     private void setSettingsPanel() {
-        settingsPanel.setLayout(new MigLayout("gap 10","[100]10[100, left, fill, grow]","[][]20[]"));
+        settingsPanel.setLayout(new MigLayout("gap 8"));
 
-
-        settingsPanel.add(new JLabel("Nazwa eksperymentu:"));
-        experimentNameTextField.getDocument().addDocumentListener(new DocumentListener() {
-            public void insertUpdate(DocumentEvent e) {
-                experiment.name = experimentNameTextField.getText();
-                refreshExperiment();
-            }
-
-            public void removeUpdate(DocumentEvent e) {
-                experiment.name = experimentNameTextField.getText();
-                refreshExperiment();
-            }
-
-            public void changedUpdate(DocumentEvent e) {
-            }
-        });
-        settingsPanel.add(experimentNameTextField, "wrap");
-
-
+        //Metoda wirtualizacji
         settingsPanel.add(new JLabel("Metoda wirtualizacji:"));
-
-        final JComboBox comboBox = new JComboBox(virtualizationMethods);
+        comboBox = new JComboBox(virtualizationMethods);
         if(experiment.methodName.equals("VirtualBox")){
             comboBox.setSelectedIndex(0);
         } else if(experiment.methodName.equals("VMware")){
@@ -86,11 +69,9 @@ public class ExperimentPanel extends TitledBorderPanel {
         } else {
             comboBox.setSelectedIndex(0);
         }
-
         if(experiment.name.equals("")){
             experiment.name = comboBox.getSelectedItem().toString();
         }
-
         experimentNameTextField.setText(experiment.name);
         comboBox.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {
@@ -107,32 +88,103 @@ public class ExperimentPanel extends TitledBorderPanel {
                 }
             }
         });
-        settingsPanel.add(comboBox, "wrap");
+        settingsPanel.add(comboBox, "wrap, grow");
 
+        //Nazwa eksperymentu
+        settingsPanel.add(new JLabel("Nazwa eksperymentu:"));
+        experimentNameTextField.getDocument().addDocumentListener(new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) {
+                experiment.name = experimentNameTextField.getText();
+                refreshExperiment();
+            }
+
+            public void removeUpdate(DocumentEvent e) {
+                experiment.name = experimentNameTextField.getText();
+                refreshExperiment();
+            }
+
+            public void changedUpdate(DocumentEvent e) {
+            }
+        });
+        settingsPanel.add(experimentNameTextField, "wrap, grow");
+
+        //PID badanego procesu
+        settingsPanel.add(new JLabel("PID badanego procesu:"));
+        experimentPidTextField.setText(experiment.processPID.toString());
+        experimentPidTextField.getDocument().addDocumentListener(new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) {
+                if(!experimentPidTextField.getText().equals("")){
+                    experiment.processPID = Long.parseLong(experimentPidTextField.getText());
+                }
+            }
+
+            public void removeUpdate(DocumentEvent e) {
+                if(!experimentPidTextField.getText().equals("")){
+                    experiment.processPID = Long.parseLong(experimentPidTextField.getText());
+                }
+            }
+
+            public void changedUpdate(DocumentEvent e) {}
+        });
+        settingsPanel.add(experimentPidTextField, "wrap, grow");
+
+        //IP gościa
+        settingsPanel.add(new JLabel("IP gościa:"));
+        experimentGuestIpTextField.setText(experiment.guestIp);
+        experimentGuestIpTextField.getDocument().addDocumentListener(new DocumentListener() {
+            public void insertUpdate(DocumentEvent e) {
+                experiment.guestIp = experimentGuestIpTextField.getText();
+            }
+
+            public void removeUpdate(DocumentEvent e) {
+                experiment.guestIp = experimentGuestIpTextField.getText();
+            }
+
+            public void changedUpdate(DocumentEvent e) {}
+        });
+        settingsPanel.add(experimentGuestIpTextField, "wrap, grow");
+
+        add(settingsPanel, BorderLayout.CENTER);
+    }
+
+    private void setActionsPanel() {
+        actionsPanel.setLayout(new MigLayout("gap 8"));
+
+        //Uruchom eksperyment
         JButton startExperiment = new JButton("Uruchom eksperyment");
         startExperiment.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.out.println("Start experiment using: " + (String)comboBox.getSelectedItem());
                 try {
                     executeScript();
-                    getProcessInfo("idea.exe");
-//                    getProcessInfo("VirtualBox.exe");
+                    getProcessInfo();
                 } catch (Exception e1) {
                     e1.printStackTrace();
                 }
             }
         });
-        settingsPanel.add(startExperiment, "span");
+        actionsPanel.add(startExperiment, "span, grow");
 
-        JButton exportExperiment = new JButton("Eksportuj eksperyment");
+        //Eksportuj eksperyment
+        JButton exportExperiment = new JButton("Eksportuj do pliku");
         exportExperiment.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 FileUtils.exportExperimentToFile(experiment);
             }
         });
-        settingsPanel.add(exportExperiment, "span");
+        actionsPanel.add(exportExperiment, "grow");
 
-        add(settingsPanel, BorderLayout.CENTER);
+        //Eksportuj eksperyment
+        JButton deleteExperiment = new JButton("Usuń z badania");
+        deleteExperiment.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                mainWindow.surveyPanel.survey.experimentList.remove(experiment);
+                mainWindow.surveyPanel.refreshPanel();
+            }
+        });
+        actionsPanel.add(deleteExperiment, "grow");
+
+        add(actionsPanel, BorderLayout.SOUTH);
     }
 
     private void refreshTable() {
@@ -250,7 +302,8 @@ public class ExperimentPanel extends TitledBorderPanel {
     }
 
 
-    private void getProcessInfo(String processName) throws InterruptedException, SigarException {
+    private void getProcessInfo() throws InterruptedException, SigarException {
+        String processName = experiment.programExeName;
         Sigar sigarImpl=new Sigar();
         SigarProxy sigar=SigarProxyCache.newInstance(sigarImpl,1);
         ProcessFinder processFinder = new ProcessFinder(sigar);

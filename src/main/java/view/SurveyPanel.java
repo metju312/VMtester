@@ -25,7 +25,7 @@ public class SurveyPanel extends JPanel {
         refreshPanel();
     }
 
-    private void refreshPanel() {
+    public void refreshPanel() {
         experimentPanelList = new ArrayList<ExperimentPanel>();
         removeAll();
         setExperimentPanelList();
@@ -45,6 +45,7 @@ public class SurveyPanel extends JPanel {
             for (int i = 0; i < 2; i++) {
                  survey.experimentList.add(new Experiment());
             }
+            mainWindow.firstLaunch = false;
         }
 
         int i = 1;
