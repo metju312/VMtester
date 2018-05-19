@@ -157,7 +157,7 @@ public class ExperimentPanel extends TitledBorderPanel {
                 System.out.println("Start experiment using: " + (String)comboBox.getSelectedItem());
                 try {
                     executeScript();
-                    getProcessInfo();
+                    //getProcessInfo();
                 } catch (Exception e1) {
                     e1.printStackTrace();
                 }
@@ -194,9 +194,27 @@ public class ExperimentPanel extends TitledBorderPanel {
     }
 
     private void executeScript() throws IOException {
+        String scriptName = "";
+        if(experiment.methodName.equals("VirtualBox")){
+            //scriptName = generateVirtualBoxScript();
+        } else if(experiment.methodName.equals("VMware")){
+            //TODO
+        } else if(experiment.methodName.equals("Docker")){
+            //TODO
+        }
+        //można to ominąć i podać skrypt z konkretnego pliku
+        //Runtime rt = Runtime.getRuntime();
+        //String[] commands = {"C:\\Users\\Matthew\\mgr\\fedora.bat"};
+
+
+
         Runtime rt = Runtime.getRuntime();
         String[] commands = {"C:\\Users\\Matthew\\mgr\\fedora.bat"};
-        Process proc = rt.exec(commands);
+
+
+
+
+        //Process proc = rt.exec(commands);
 //
 //        BufferedReader stdInput = new BufferedReader(new
 //                InputStreamReader(proc.getInputStream()));

@@ -15,8 +15,10 @@ public class ProgramPanel extends TitledBorderPanel {
     public JLabel programNameLabel = new JLabel();
     public JLabel programTypeLabel = new JLabel();
     public JLabel programPathLabel = new JLabel();
-    public ProgramPanel(String name) {
+    private String defaultProgramsPath;
+    public ProgramPanel(String name, String defaultProgramsPath) {
         super(name);
+        this.defaultProgramsPath = defaultProgramsPath;
         setLayout(new MigLayout());
         refreshPanel();
     }
@@ -42,7 +44,8 @@ public class ProgramPanel extends TitledBorderPanel {
         add(programPathLabel, "wrap");
 
 //        setProgram(new File("C:\\Users\\Matthew\\mgr\\support-tools.jar"));
-        setProgram(new File("C:\\Users\\Matthew\\mgr\\ram-usage-program.jar"));
+        System.out.println(defaultProgramsPath);
+        setProgram(new File(defaultProgramsPath + "\\ram-usage-program.jar"));
     }
 
     private void setProgram(File file) {

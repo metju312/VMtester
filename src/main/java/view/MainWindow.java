@@ -18,14 +18,17 @@ public class MainWindow extends JFrame {
     private static final Logger LOGGER = Logger.getLogger(MainWindow.class.getName());
     private static MainWindow instance = null;
 
-    private ProgramPanel programPanel = new ProgramPanel("Badany program");
+    public String SOURCES_PATH = "C:\\Magister\\VMtester";
+    public String RESULTS_PATH = SOURCES_PATH + "\\results";
+    public String SURVEY_PATH = RESULTS_PATH + "\\survey";
+    public String JARS_PATH = SOURCES_PATH + "\\jars";
+
+    private ProgramPanel programPanel = new ProgramPanel("Badany program", JARS_PATH);
     private JScrollPane programScrollPane = new JScrollPane(programPanel);
     public SurveyPanel surveyPanel = new SurveyPanel(this);
     private JScrollPane surveyScrollPane = new JScrollPane(surveyPanel);
     public TablePanel tablePanel = new TablePanel(surveyPanel.survey);
     private FooterPanel footerPanel = new FooterPanel();
-
-    private String IMPORT_EXPERIMENT_PATH = "C:\\Magister\\VMtester\\results";
 
     private int mainWindowWidth = 1000;
     private int mainWindowHeight = 800;
@@ -86,7 +89,7 @@ public class MainWindow extends JFrame {
         JMenuItem openTest = new JMenuItem("Otwórz badanie", openIcon);
         openTest.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JFileChooser fileChooser = new JFileChooser("C:\\Magister\\VMtester\\results\\survey");
+                JFileChooser fileChooser = new JFileChooser(SURVEY_PATH);
                 if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                     File file = fileChooser.getSelectedFile();
                     importSurvey(file);
@@ -96,7 +99,7 @@ public class MainWindow extends JFrame {
         JMenuItem saveTest = new JMenuItem("Zapisz badanie", saveIcon);
         saveTest.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JFileChooser fileChooser = new JFileChooser("C:\\Magister\\VMtester\\results\\survey");
+                JFileChooser fileChooser = new JFileChooser(SURVEY_PATH);
                 fileChooser.setSelectedFile(new File(surveyPanel.survey.name + ".json"));
                 if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
                     FileUtils.exportSurveyToFile(surveyPanel.survey, fileChooser.getSelectedFile().getName());
@@ -116,7 +119,7 @@ public class MainWindow extends JFrame {
         JMenuItem importExperiment = new JMenuItem("Importuj eksperyment");
         importExperiment.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                JFileChooser fileChooser = new JFileChooser(IMPORT_EXPERIMENT_PATH);
+                JFileChooser fileChooser = new JFileChooser(RESULTS_PATH);
                 int returnValue = fileChooser.showOpenDialog(null);
                 if (returnValue == JFileChooser.APPROVE_OPTION) {
                     File file = fileChooser.getSelectedFile();
