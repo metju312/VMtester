@@ -5,16 +5,25 @@ import controller.Experiment;
 import view.ExperimentPanel;
 import view.SurveyPanel;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
 public class FileUtils {
+    public static void exportStringToFile(String content, String fileName, String relativePath) {
+        try {
+            File file = new File(relativePath + "/" + fileName);
+            FileWriter fileWriter = new FileWriter(file);
+            fileWriter.write(content);
+            fileWriter.flush();
+            fileWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void exportExperimentToFile(Experiment experiment) {
         ObjectMapper mapper = new ObjectMapper();
         File file = new File("results/" + experiment.name + "_"+ now() + ".json");

@@ -27,11 +27,11 @@ public class MainWindow extends JFrame {
     private JScrollPane surveyScrollPane = new JScrollPane(surveyPanel);
     public TablePanel tablePanel = new TablePanel(surveyPanel.survey);
     private FooterPanel footerPanel = new FooterPanel();
-    private ProgramPanel programPanel = new ProgramPanel("Badany program", JARS_PATH);
+    public ProgramPanel programPanel = new ProgramPanel("Badany program", JARS_PATH);
     private JScrollPane programScrollPane = new JScrollPane(programPanel);
 
     private int mainWindowWidth = 1000;
-    private int mainWindowHeight = 800;
+    private int mainWindowHeight = 730;
 
 
     public static MainWindow getInstance() {

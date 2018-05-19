@@ -17,6 +17,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.List;
@@ -157,7 +158,7 @@ public class ExperimentPanel extends TitledBorderPanel {
                 System.out.println("Start experiment using: " + (String)comboBox.getSelectedItem());
                 try {
                     executeScript();
-                    //getProcessInfo();
+                    getProcessInfo();
                 } catch (Exception e1) {
                     e1.printStackTrace();
                 }
@@ -196,7 +197,11 @@ public class ExperimentPanel extends TitledBorderPanel {
     private void executeScript() throws IOException {
         String scriptName = "";
         if(experiment.methodName.equals("VirtualBox")){
-            //scriptName = generateVirtualBoxScript();
+            generateVirtualBoxScript();
+            Runtime rt = Runtime.getRuntime();
+            File file = new File("jars/VirtualBox.bat");
+            String[] commands = {file.getAbsolutePath()};
+            Process proc = rt.exec(commands);
         } else if(experiment.methodName.equals("VMware")){
             //TODO
         } else if(experiment.methodName.equals("Docker")){
@@ -208,13 +213,8 @@ public class ExperimentPanel extends TitledBorderPanel {
 
 
 
-        Runtime rt = Runtime.getRuntime();
-        String[] commands = {"C:\\Users\\Matthew\\mgr\\fedora.bat"};
 
 
-
-
-        //Process proc = rt.exec(commands);
 //
 //        BufferedReader stdInput = new BufferedReader(new
 //                InputStreamReader(proc.getInputStream()));
@@ -319,6 +319,31 @@ public class ExperimentPanel extends TitledBorderPanel {
 
     }
 
+    private void generateVirtualBoxScript() {
+        //TODO remove
+        experiment.guestIp = "192.168.1.26";
+
+        StringBuilder sb = new StringBuilder();
+
+        //send program.jar
+        sb.append("call echo y | pscp -pw 1qazcde3 \"");
+        sb.append(mainWindow.programPanel.program.path);
+        sb.append("\" liveuser@");
+        sb.append(experiment.guestIp);
+        sb.append(":/home/liveuser/program.jar\n");
+
+        //java -jar
+        sb.append("call plink liveuser@");
+        sb.append(experiment.guestIp);
+        sb.append(" -pw 1qazcde3 -m \"");
+        File file = new File("jars/callProgramJar.txt");
+        sb.append(file.getAbsolutePath());
+        sb.append("\"");
+
+        System.out.println(sb.toString());
+        FileUtils.exportStringToFile(sb.toString(), "VirtualBox.bat", "jars");
+    }
+
 
     private void getProcessInfo() throws InterruptedException, SigarException {
         String processName = experiment.programExeName;
@@ -332,7 +357,7 @@ public class ExperimentPanel extends TitledBorderPanel {
             String cpuPerc="?";
             java.util.List info;
 //            long pid = processFinder.findSingleProcess("Exe.Name.ct=" + processName);
-            long pid = 10800;
+            long pid = 9892l;;
             System.out.println(pid);
             info= Ps.getInfo(sigar,pid);
             ProcCpu cpu=sigar.getProcCpu(pid);
