@@ -200,123 +200,15 @@ public class ExperimentPanel extends TitledBorderPanel {
             generateVirtualBoxScript();
             Runtime rt = Runtime.getRuntime();
             File file = new File("jars/VirtualBox.bat");
+            //można to ominąć i podać skrypt z konkretnego pliku
+            //String[] commands = {"C:\\Users\\Matthew\\mgr\\fedora.bat"};
             String[] commands = {file.getAbsolutePath()};
-            Process proc = rt.exec(commands);
+            rt.exec(commands);
         } else if(experiment.methodName.equals("VMware")){
             //TODO
         } else if(experiment.methodName.equals("Docker")){
             //TODO
         }
-        //można to ominąć i podać skrypt z konkretnego pliku
-        //Runtime rt = Runtime.getRuntime();
-        //String[] commands = {"C:\\Users\\Matthew\\mgr\\fedora.bat"};
-
-
-
-
-
-//
-//        BufferedReader stdInput = new BufferedReader(new
-//                InputStreamReader(proc.getInputStream()));
-//
-//        BufferedReader stdError = new BufferedReader(new
-//                InputStreamReader(proc.getErrorStream()));
-//
-//        // read the output from the command
-//        System.out.println("Here is the standard output of the command:\n");
-//        String s = null;
-//        while ((s = stdInput.readLine()) != null) {
-//            System.out.println(s);
-//        }
-//
-//        // read any errors from the attempted command
-//        System.out.println("Here is the standard error of the command (if any):\n");
-//        while ((s = stdError.readLine()) != null) {
-//            System.out.println(s);
-//        }
-
-
-//        try {
-//            final Sigar sigar = new Sigar();
-//            while (true) {
-//                ProcCpu cpu = sigar.getProcCpu("Exe.Name.ct=idea.exe");
-//                System.out.println(cpu.getPercent());
-//            }
-//        } catch (SigarException ex) {
-//            ex.printStackTrace();
-//        }
-//        final int cpuCount;
-//        final long pid = 5;
-//        ProcCpu prevPc;
-//        double load;
-//        int TOTAL_TIME_UPDATE_LIMIT = 1;
-//
-//
-//        try {
-//
-//            Sigar sigar = new Sigar();
-//            ProcCpu curPc = sigar.getProcCpu(pid);
-//            long totalDelta = curPc.getTotal() - prevPc.getTotal();
-//            long timeDelta = curPc.getLastTime() - prevPc.getLastTime();
-//            if (totalDelta == 0) {
-//                if (timeDelta > TOTAL_TIME_UPDATE_LIMIT) load = 0;
-//                if (load == 0) prevPc = curPc;
-//            } else {
-//                load = 100. * totalDelta / timeDelta / cpuCount;
-//                prevPc = curPc;
-//            }
-//
-//        } catch (SigarException e) {
-//            e.printStackTrace();
-//        }
-
-//
-//        Sigar sigarImpl=new Sigar();
-//        SigarProxy sigar=SigarProxyCache.newInstance(sigarImpl,1);
-//
-//        try {
-//            for(int j = 0; j <= 8; j++) {
-//                Shell.clearScreen();
-////                System.out.println(sigar.getProcStat().toString());
-////                System.out.println(sigar.getCpuPerc());
-////                System.out.println(sigar.getMem());
-////                System.out.println(sigar.getSwap());
-//                System.out.println();
-//                System.out.println();
-//                System.out.println();
-//                String[] args = {"12512","10192"};
-//                long[] pids=Shell.getPids(sigar,args);
-//                for (int i=0; i < pids.length; i++) {
-//                    long pid=pids[i];
-//                    String cpuPerc="?";
-//                    java.util.List info;
-//                    try {
-//                        info= Ps.getInfo(sigar,pid);
-//                    }
-//                    catch (      SigarException e) {
-//                        continue;
-//                    }
-//                    try {
-//                        ProcCpu cpu=sigar.getProcCpu(pid);
-//                        cpuPerc=CpuPerc.format(cpu.getPercent());
-//                    }
-//                    catch (      SigarException e) {
-//                    }
-//                    info.add(info.size() - 1,cpuPerc);
-//                    System.out.println(Ps.join(info));
-//                }
-//                try {
-//                    Thread.sleep(1000);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//                SigarProxyCache.clear(sigar);
-//            }
-//        } catch (SigarException e) {
-//            e.printStackTrace();
-//        }
-
-
     }
 
     private void generateVirtualBoxScript() {
