@@ -84,6 +84,7 @@ public class MainWindow extends JFrame {
                 fileChooser.setSelectedFile(new File(surveyPanel.survey.name + ".json"));
                 if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
                     FileUtils.exportSurveyToFile(surveyPanel.survey, fileChooser.getSelectedFile().getName());
+                    setTitleUsingSurveyName(surveyPanel.survey.name);
                 }
             }
         });

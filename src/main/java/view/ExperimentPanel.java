@@ -28,7 +28,7 @@ public class ExperimentPanel extends TitledBorderPanel {
     private JTextField experimentNameTextField = new JTextField();
     private TitledBorderPanel settingsPanel = new TitledBorderPanel("Ustawienia");
     private TitledBorderPanel resultsPanel = new TitledBorderPanel("Wyniki");
-    private String[] virtualizationMethods = { "Docker", "VirtualBox", "VMware" };
+    private String[] virtualizationMethods = { "VirtualBox", "VMware", "Docker" };
 
     Sigar sigarImpl=new Sigar();
     SigarProxy sigar=SigarProxyCache.newInstance(sigarImpl,1);
@@ -77,8 +77,20 @@ public class ExperimentPanel extends TitledBorderPanel {
         settingsPanel.add(new JLabel("Metoda wirtualizacji:"));
 
         final JComboBox comboBox = new JComboBox(virtualizationMethods);
-        comboBox.setSelectedIndex(0);
-        experiment.name = comboBox.getSelectedItem().toString();
+        if(experiment.methodName.equals("VirtualBox")){
+            comboBox.setSelectedIndex(0);
+        } else if(experiment.methodName.equals("VMware")){
+            comboBox.setSelectedIndex(1);
+        } else if(experiment.methodName.equals("Docker")){
+            comboBox.setSelectedIndex(2);
+        } else {
+            comboBox.setSelectedIndex(0);
+        }
+
+        if(experiment.name.equals("")){
+            experiment.name = comboBox.getSelectedItem().toString();
+        }
+
         experimentNameTextField.setText(experiment.name);
         comboBox.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent e) {

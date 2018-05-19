@@ -26,6 +26,7 @@ public class SurveyPanel extends JPanel {
     }
 
     private void refreshPanel() {
+        experimentPanelList = new ArrayList<ExperimentPanel>();
         removeAll();
         setExperimentPanelList();
         setAddNewExperimentPanel();
@@ -40,9 +41,10 @@ public class SurveyPanel extends JPanel {
     }
 
     private void setExperimentPanelList() {
-        //TODO zrobić default 1 experyment z możliwością dodawania kolejnych
-        for (int i = 0; i < 3; i++) {
-            survey.experimentList.add(new Experiment("Docker"));
+        if(survey.experimentList.size() == 0){
+            for (int i = 0; i < 2; i++) {
+                 survey.experimentList.add(new Experiment());
+            }
         }
 
         int i = 1;
