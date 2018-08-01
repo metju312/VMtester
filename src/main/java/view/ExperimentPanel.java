@@ -205,6 +205,11 @@ public class ExperimentPanel extends TitledBorderPanel {
             String[] commands = {file.getAbsolutePath()};
             rt.exec(commands);
         } else if(experiment.methodName.equals("VMware")){
+            generateVirtualBoxScript();
+            Runtime rt = Runtime.getRuntime();
+            File file = new File("jars/VMware.bat");
+            String[] commands = {file.getAbsolutePath()};
+            rt.exec(commands);
             //TODO
         } else if(experiment.methodName.equals("Docker")){
             //TODO
@@ -213,7 +218,7 @@ public class ExperimentPanel extends TitledBorderPanel {
 
     private void generateVirtualBoxScript() {
         //TODO remove
-        experiment.guestIp = "192.168.1.26";
+        //experiment.guestIp = "192.168.1.26";
 
         StringBuilder sb = new StringBuilder();
 
@@ -244,12 +249,12 @@ public class ExperimentPanel extends TitledBorderPanel {
         ProcessFinder processFinder = new ProcessFinder(sigar);
         experiment.ramUsageList = new ArrayList<Integer>();
         experiment.cpuUsageList = new ArrayList<Double>();
-        for(int j = 0; j <= 6; j++){
+        for(int j = 0; j <= 10; j++){
             Shell.clearScreen();
             String cpuPerc="?";
             java.util.List info;
 //            long pid = processFinder.findSingleProcess("Exe.Name.ct=" + processName);
-            long pid = 9892l;;
+            long pid = experiment.processPID;
             System.out.println(pid);
             info= Ps.getInfo(sigar,pid);
             ProcCpu cpu=sigar.getProcCpu(pid);
@@ -257,18 +262,21 @@ public class ExperimentPanel extends TitledBorderPanel {
             info.add(info.size() - 1,cpuPerc);
             System.out.println(Ps.join(info));
 
-            //RAM memory
-            //ProcMem state = sigar.getProcMem(pid);
-            System.out.println(sigar.getProcMem(pid).getSize());
-            System.out.println(sigar.getProcMem(pid).getSize());
 
-            System.out.println(cpuPerc);
-            System.out.println(cpu.getPercent());
-            System.out.println();
-
-
-            experiment.ramUsageList.add((int) (sigar.getProcMem(pid).getSize()/1000));
+            //CPU percentage
             experiment.cpuUsageList.add(cpu.getPercent()*10);
+            System.out.println("CPU percentage: "+ experiment.cpuUsageList.get(experiment.cpuUsageList.size()-1));
+
+            //RAM memory
+            experiment.ramUsageList.add((int) (sigar.getProcMem(pid).getSize()/1000));
+            System.out.println("RAM memory: "+ experiment.ramUsageList.get(experiment.ramUsageList.size()-1));
+
+            //mem
+            System.out.println("RAM getMajorFaults: "+ sigar.getProcMem(pid).getMajorFaults());
+            System.out.println("RAM getMinorFaults: "+ sigar.getProcMem(pid).getMinorFaults());
+            System.out.println("RAM getPageFaults: "+ sigar.getProcMem(pid).getPageFaults());
+            System.out.println("RAM getResident: "+ sigar.getProcMem(pid).getResident());
+            System.out.println("RAM getShare: "+ sigar.getProcMem(pid).getShare());
 
             Thread.sleep(500);
         }

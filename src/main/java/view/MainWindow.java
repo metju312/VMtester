@@ -53,7 +53,7 @@ public class MainWindow extends JFrame {
         for (int i = 0; i < 2; i++) {
             surveyPanel.survey.experimentList.add(new Experiment());
             surveyPanel.refreshPanel();
-            tablePanel.refreshPanel();
+            tablePanel.refreshPanel(surveyPanel.survey);
         }
         programPanel.refreshPanel();
     }
@@ -84,7 +84,7 @@ public class MainWindow extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 surveyPanel.survey.experimentList = new ArrayList<Experiment>();
                 surveyPanel.refreshPanel();
-                tablePanel.refreshPanel();
+                tablePanel.refreshPanel(surveyPanel.survey);
             }
         });
         JMenuItem openTest = new JMenuItem("Otwórz badanie", openIcon);
@@ -125,7 +125,7 @@ public class MainWindow extends JFrame {
                 if (returnValue == JFileChooser.APPROVE_OPTION) {
                     File file = fileChooser.getSelectedFile();
                     surveyPanel.importExperiment(file);
-                    tablePanel.refreshPanel();
+                    tablePanel.refreshPanel(surveyPanel.survey);
                 }
             }
         });
@@ -187,7 +187,8 @@ public class MainWindow extends JFrame {
     }
 
     public void refreshTable(){
-        tablePanel.refreshPanel();
+        Survey survey = surveyPanel.survey;
+        tablePanel.refreshPanel(survey);
     }
 
     public void importExperiment(){

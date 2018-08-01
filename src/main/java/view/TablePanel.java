@@ -23,13 +23,13 @@ public class TablePanel extends JPanel {
     private String chartDataType = "ram";
 
     public TablePanel(Survey survey) {
-        this.survey = survey;
         setLayout(new GridLayout());
-        refreshPanel();
+        refreshPanel(survey);
     }
 
-    public void refreshPanel() {
+    public void refreshPanel(Survey survey) {
         removeAll();
+        this.survey = survey;
         setTable();
         revalidate();
         repaint();
