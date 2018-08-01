@@ -195,28 +195,16 @@ public class ExperimentPanel extends TitledBorderPanel {
     }
 
     private void executeScript() throws IOException {
-        String scriptName = "";
-        if(experiment.methodName.equals("VirtualBox")){
-            generateVirtualBoxScript();
-            Runtime rt = Runtime.getRuntime();
-            File file = new File("jars/VirtualBox.bat");
-            //można to ominąć i podać skrypt z konkretnego pliku
-            //String[] commands = {"C:\\Users\\Matthew\\mgr\\fedora.bat"};
-            String[] commands = {file.getAbsolutePath()};
-            rt.exec(commands);
-        } else if(experiment.methodName.equals("VMware")){
-            generateVirtualBoxScript();
-            Runtime rt = Runtime.getRuntime();
-            File file = new File("jars/VMware.bat");
-            String[] commands = {file.getAbsolutePath()};
-            rt.exec(commands);
-            //TODO
-        } else if(experiment.methodName.equals("Docker")){
-            //TODO
-        }
+        generateScriptFile(experiment.methodName);
+        Runtime rt = Runtime.getRuntime();
+        File file = new File("jars/VirtualBox.bat");
+        //można to ominąć i podać skrypt z konkretnego pliku
+        //String[] commands = {"C:\\Users\\Matthew\\mgr\\fedora.bat"};
+        String[] commands = {file.getAbsolutePath()};
+        rt.exec(commands);
     }
 
-    private void generateVirtualBoxScript() {
+    private void generateScriptFile(String scriptName) {
         //TODO remove
         //experiment.guestIp = "192.168.1.26";
 
@@ -238,7 +226,7 @@ public class ExperimentPanel extends TitledBorderPanel {
         sb.append("\"");
 
         System.out.println(sb.toString());
-        FileUtils.exportStringToFile(sb.toString(), "VirtualBox.bat", "jars");
+        FileUtils.exportStringToFile(sb.toString(), scriptName + ".bat", "jars");
     }
 
 
