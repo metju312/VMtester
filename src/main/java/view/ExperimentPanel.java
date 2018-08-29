@@ -236,13 +236,17 @@ public class ExperimentPanel extends TitledBorderPanel {
         ProcessFinder processFinder = new ProcessFinder(sigar);
         experiment.ramUsageList = new ArrayList<Integer>();
         experiment.cpuUsageList = new ArrayList<Double>();
+        boolean firstTest = true;
+        double rxToSubtract = 0d;
+        double txToSubtract = 0d;
         for(int j = 0; j <= mainWindow.experimentSettings.experimentCount; j++){
             Shell.clearScreen();
             String cpuPerc="?";
             java.util.List info;
 //            long pid = processFinder.findSingleProcess("Exe.Name.ct=" + processName);
 //            long pid = experiment.processPID; //TODO uncomment
-            long pid = 8108;
+            long pid = 13376;
+
             System.out.println(pid);
             info= Ps.getInfo(sigar,pid);
             ProcCpu cpu=sigar.getProcCpu(pid);
@@ -250,14 +254,14 @@ public class ExperimentPanel extends TitledBorderPanel {
             info.add(info.size() - 1,cpuPerc);
             System.out.println(Ps.join(info));
 
-
             //CPU percentage
             experiment.cpuUsageList.add(cpu.getPercent()*10);
             System.out.println("CPU percentage: "+ experiment.cpuUsageList.get(experiment.cpuUsageList.size()-1));
 
+            //Disc memory
+
             //RAM memory
-            experiment.ramUsageList.add((int) (sigar.getProcMem(pid).getSize()/1000));
-            System.out.println("RAM memory: "+ experiment.ramUsageList.get(experiment.ramUsageList.size()-1));
+            experiment.ramUsageList.add((int) (sigar.getProcMem(pid).getSize()/1038336));
 
             //mem
             System.out.println("RAM getMajorFaults: "+ sigar.getProcMem(pid).getMajorFaults());
@@ -265,8 +269,45 @@ public class ExperimentPanel extends TitledBorderPanel {
             System.out.println("RAM getPageFaults: "+ sigar.getProcMem(pid).getPageFaults());
             System.out.println("RAM getResident: "+ sigar.getProcMem(pid).getResident());
             System.out.println("RAM getShare: "+ sigar.getProcMem(pid).getShare());
+            Sigar.formatSize(sigar.getProcMem(pid).getSize());
+            System.out.println("RAM getSize: "+ (sigar.getProcMem(pid).toString()));
+//            experiment.ramUsageList.add((int) ());
+
+            //Network
+            double rxCurrenttmpSum = 0d;
+            double txCurrenttmpSum = 0d;
+            for (String ni : sigar.getNetInterfaceList()) {
+                // System.out.println(ni);
+                NetInterfaceStat netStat = sigar.getNetInterfaceStat(ni);
+                NetInterfaceConfig ifConfig = sigar.getNetInterfaceConfig(ni);
+                String hwaddr = null;
+                if (!NetFlags.NULL_HWADDR.equals(ifConfig.getHwaddr())) {
+                    hwaddr = ifConfig.getHwaddr();
+                }
+                if (hwaddr != null) {
+                    long rxCurrenttmp = netStat.getRxBytes();
+                    rxCurrenttmpSum+=rxCurrenttmp;
+                    long txCurrenttmp = netStat.getTxBytes();
+                    txCurrenttmpSum+=txCurrenttmp;
+                }
+            }
+            if(firstTest){
+                rxToSubtract = rxCurrenttmpSum;
+                txToSubtract = txCurrenttmpSum;
+            }
+            rxCurrenttmpSum = (rxCurrenttmpSum - rxToSubtract)/1000;
+            txCurrenttmpSum = (txCurrenttmpSum - txToSubtract)/1000;
+            experiment.rxBytesList.add((double) (rxCurrenttmpSum));
+            experiment.txBytesList.add((double) (txCurrenttmpSum));
+
+            System.out.println(rxCurrenttmpSum);
+            System.out.println(txCurrenttmpSum);
 
             Thread.sleep(mainWindow.experimentSettings.experimentDelay);
+            firstTest = false;
+            System.out.println();
+            System.out.println();
+            System.out.println();
         }
         endExperiment();
     }
@@ -274,6 +315,8 @@ public class ExperimentPanel extends TitledBorderPanel {
     private void endExperiment() {
         experiment.averageRamUsage = calculateAverageFromIntegers(experiment.ramUsageList);
         experiment.averageCpuUsage = calculateAverageFromDoubles(experiment.cpuUsageList);
+        experiment.rxBytes = (double)experiment.rxBytesList.get(experiment.rxBytesList.size()-1);
+        experiment.txBytes = (double)experiment.txBytesList.get(experiment.txBytesList.size()-1);
         refreshTable();
     }
 

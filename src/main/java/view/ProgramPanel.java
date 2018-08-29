@@ -47,7 +47,7 @@ public class ProgramPanel extends TitledBorderPanel {
 
 //        setProgram(new File("C:\\Users\\Matthew\\mgr\\support-tools.jar"));
         System.out.println(defaultProgramsPath);
-        setProgram(new File(defaultProgramsPath + "\\benchmark.jar"));
+        setProgram(new File(defaultProgramsPath + "\\NaiveFibonacciTest.jar"));
         revalidate();
         repaint();
     }

@@ -26,14 +26,14 @@ public class MainWindow extends JFrame {
 
     public SurveyPanel surveyPanel = new SurveyPanel(this);
     private JScrollPane surveyScrollPane = new JScrollPane(surveyPanel);
-    public TablePanel tablePanel = new TablePanel(surveyPanel.survey);
+    public TablePanel tablePanel = new TablePanel(surveyPanel.survey, this);
     private FooterPanel footerPanel = new FooterPanel();
     public ProgramPanel programPanel = new ProgramPanel("Badany program", JARS_PATH);
     private JScrollPane programScrollPane = new JScrollPane(programPanel);
     public ExperimentSettings experimentSettings = new ExperimentSettings();
 
-    private int mainWindowWidth = 1140;
-    private int mainWindowHeight = 730;
+    private int mainWindowWidth = 870;
+    private int mainWindowHeight = 630;
 
 
     public static MainWindow getInstance() {
@@ -51,8 +51,8 @@ public class MainWindow extends JFrame {
         setMenu();
         setPanels();
 
-        //dodanie 2 domyślnych eksperymentów
-        for (int i = 0; i < 2; i++) {
+        //dodanie 3 domyślnych eksperymentów
+        for (int i = 0; i < 3; i++) {
             surveyPanel.survey.experimentList.add(new Experiment());
             surveyPanel.refreshPanel();
             tablePanel.refreshPanel(surveyPanel.survey);
@@ -203,6 +203,6 @@ public class MainWindow extends JFrame {
     }
 
     public void setTitleUsingSurveyName(String surveyName) {
-        setTitle("VMTester - " + surveyName);
+        setTitle("VMTester");
     }
 }
