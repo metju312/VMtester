@@ -60,7 +60,7 @@ public class SurveyPanel extends JPanel {
     }
 
     public ExperimentPanel addExperiment(){
-        Experiment experiment = new Experiment("Docker");
+        Experiment experiment = new Experiment("VirtualBox");
         survey.experimentList.add(experiment);
         ExperimentPanel experimentPanel = new ExperimentPanel("Eksperyment " + (experimentPanelList.size()+1), mainWindow, experiment);
         experimentPanelList.add(experimentPanel);

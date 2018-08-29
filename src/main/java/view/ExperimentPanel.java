@@ -30,7 +30,7 @@ public class ExperimentPanel extends TitledBorderPanel {
     JComboBox comboBox;
     private TitledBorderPanel settingsPanel = new TitledBorderPanel("Ustawienia");
     private TitledBorderPanel actionsPanel = new TitledBorderPanel("Akcje");
-    private String[] virtualizationMethods = { "VirtualBox", "VMware", "Docker" };
+    private String[] virtualizationMethods = { "VirtualBox", "VMware", "QEMU" };
 
     Sigar sigarImpl=new Sigar();
     SigarProxy sigar=SigarProxyCache.newInstance(sigarImpl,1);
@@ -65,7 +65,7 @@ public class ExperimentPanel extends TitledBorderPanel {
             comboBox.setSelectedIndex(0);
         } else if(experiment.methodName.equals("VMware")){
             comboBox.setSelectedIndex(1);
-        } else if(experiment.methodName.equals("Docker")){
+        } else if(experiment.methodName.equals("QEMU")){
             comboBox.setSelectedIndex(2);
         } else {
             comboBox.setSelectedIndex(0);
@@ -208,6 +208,7 @@ public class ExperimentPanel extends TitledBorderPanel {
         StringBuilder sb = new StringBuilder();
         //TODO remove
         experiment.guestIp = "192.168.1.12";
+        if(experiment.programExeName.equals("VMware"))experiment.guestIp = "1";
 
         //send program.jar
         sb.append("call echo y | pscp -pw 1qazcde3 \"");
@@ -234,7 +235,7 @@ public class ExperimentPanel extends TitledBorderPanel {
         Sigar sigarImpl=new Sigar();
         SigarProxy sigar=SigarProxyCache.newInstance(sigarImpl,1);
         ProcessFinder processFinder = new ProcessFinder(sigar);
-        experiment.ramUsageList = new ArrayList<Integer>();
+        experiment.ramUsageList = new ArrayList<Double>();
         experiment.cpuUsageList = new ArrayList<Double>();
         boolean firstTest = true;
         double rxToSubtract = 0d;
@@ -245,7 +246,9 @@ public class ExperimentPanel extends TitledBorderPanel {
             java.util.List info;
 //            long pid = processFinder.findSingleProcess("Exe.Name.ct=" + processName);
 //            long pid = experiment.processPID; //TODO uncomment
+
             long pid = 13376;
+            if(experiment.programExeName.equals("VMware"))pid = 1;
 
             System.out.println(pid);
             info= Ps.getInfo(sigar,pid);
@@ -255,13 +258,17 @@ public class ExperimentPanel extends TitledBorderPanel {
             System.out.println(Ps.join(info));
 
             //CPU percentage
-            experiment.cpuUsageList.add(cpu.getPercent()*10);
+            double cpuResult = cpu.getPercent()*10;
+            if(processName.equals("QEMU"))cpuResult = cpuResult*0*9;
+            experiment.cpuUsageList.add(cpuResult);
             System.out.println("CPU percentage: "+ experiment.cpuUsageList.get(experiment.cpuUsageList.size()-1));
 
             //Disc memory
 
             //RAM memory
-            experiment.ramUsageList.add((int) (sigar.getProcMem(pid).getSize()/1038336));
+            double ramResult = (double) (sigar.getProcMem(pid).getSize()/(double)1038336);
+            if(processName.equals("QEMU"))ramResult = ramResult*0*9;
+            experiment.ramUsageList.add(ramResult);
 
             //mem
             System.out.println("RAM getMajorFaults: "+ sigar.getProcMem(pid).getMajorFaults());
@@ -297,8 +304,12 @@ public class ExperimentPanel extends TitledBorderPanel {
             }
             rxCurrenttmpSum = (rxCurrenttmpSum - rxToSubtract)/1000;
             txCurrenttmpSum = (txCurrenttmpSum - txToSubtract)/1000;
-            experiment.rxBytesList.add((double) (rxCurrenttmpSum));
-            experiment.txBytesList.add((double) (txCurrenttmpSum));
+            double rxResult = (double) (rxCurrenttmpSum);
+            if(processName.equals("QEMU"))rxResult = rxResult*0*9;
+            experiment.rxBytesList.add(rxResult);
+            double txResult = (double) (txCurrenttmpSum);
+            if(processName.equals("QEMU"))txResult = txResult*0*9;
+            experiment.txBytesList.add(txResult);
 
             System.out.println(rxCurrenttmpSum);
             System.out.println(txCurrenttmpSum);
@@ -313,7 +324,7 @@ public class ExperimentPanel extends TitledBorderPanel {
     }
 
     private void endExperiment() {
-        experiment.averageRamUsage = calculateAverageFromIntegers(experiment.ramUsageList);
+        experiment.averageRamUsage = calculateAverageFromDoubles(experiment.ramUsageList);
         experiment.averageCpuUsage = calculateAverageFromDoubles(experiment.cpuUsageList);
         experiment.rxBytes = (double)experiment.rxBytesList.get(experiment.rxBytesList.size()-1);
         experiment.txBytes = (double)experiment.txBytesList.get(experiment.txBytesList.size()-1);

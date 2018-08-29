@@ -18,7 +18,7 @@ public class Experiment {
     private ExperimentResults experimentResults;
 
     //ram
-    public List<Integer> ramUsageList = new ArrayList<Integer>();
+    public List<Double> ramUsageList = new ArrayList<Double>();
     public Double averageRamUsage = 0d;
     public Double ramWeight = 0d;
 

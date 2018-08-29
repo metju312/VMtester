@@ -13,11 +13,15 @@ public class SettingsFrame extends JFrame {
 
     private JTextField experimentCountTextField = new JTextField();
     private JTextField experimentDelayTextField = new JTextField();
+    private JTextField ramTextField = new JTextField();
+    private JTextField cpuTextField = new JTextField();
+    private JTextField rxTextField = new JTextField();
+    private JTextField txTextField = new JTextField();
 
     public SettingsFrame(MainWindow mainWindow) {
         super("Ustawienia");
         this.mainWindow = mainWindow;
-        setSize(800, 600);
+        setSize(360, 330);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         generatePanel();
@@ -40,7 +44,22 @@ public class SettingsFrame extends JFrame {
 
         //Metoda wagowa
         TitledBorderPanel weightSettings = new TitledBorderPanel("Ustawienia metody wagowej");
-        weightSettings.add(new JLabel("wagi:"));
+        weightSettings.setLayout(new MigLayout());
+        weightSettings.add(new JLabel("Waga jednostki użycia pamięci RAM:"));
+        ramTextField.setText(mainWindow.experimentSettings.ramMixer.toString());
+        weightSettings.add(ramTextField, "wrap, grow");
+
+        weightSettings.add(new JLabel("Waga jednostki procentowego użycia CPU:"));
+        cpuTextField.setText(mainWindow.experimentSettings.cpuMixer.toString());
+        weightSettings.add(cpuTextField, "wrap, grow");
+
+        weightSettings.add(new JLabel("Waga jednostki sieciowego transferu przychodzącego:"));
+        rxTextField.setText(mainWindow.experimentSettings.rxMixer.toString());
+        weightSettings.add(rxTextField, "wrap, grow");
+
+        weightSettings.add(new JLabel("Waga jednostki sieciowego transferu wychadzącego:"));
+        txTextField.setText(mainWindow.experimentSettings.txMixer.toString());
+        weightSettings.add(txTextField, "wrap, grow");
 
         //Przyciski zapisu
         JPanel buttonsPanel = new JPanel();
@@ -70,6 +89,10 @@ public class SettingsFrame extends JFrame {
     private void saveSettings() {
         mainWindow.experimentSettings.experimentCount = Integer.parseInt(experimentCountTextField.getText());
         mainWindow.experimentSettings.experimentDelay = Integer.parseInt(experimentDelayTextField.getText());
+        mainWindow.experimentSettings.ramMixer = Double.parseDouble(ramTextField.getText());
+        mainWindow.experimentSettings.cpuMixer = Double.parseDouble(cpuTextField.getText());
+        mainWindow.experimentSettings.rxMixer = Double.parseDouble(rxTextField.getText());
+        mainWindow.experimentSettings.txMixer = Double.parseDouble(txTextField.getText());
     }
 
     private void exitFrame() {
