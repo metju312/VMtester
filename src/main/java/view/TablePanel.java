@@ -67,7 +67,7 @@ public class TablePanel extends JPanel {
 
         data[4][0] = "Suma wag";
         for (int i = 0; i < columnsCount; i++) {
-            data[4][i + 1] = survey.experimentList.get(i).weightSum;
+            data[4][i + 1] = String.format("%.2f", survey.experimentList.get(i).weightSum);
         }
         final JTable table = new JTable(data, columns);
         table.addMouseListener(new MouseAdapter() {
@@ -119,8 +119,10 @@ public class TablePanel extends JPanel {
         JFreeChart chart = ChartFactory.createXYLineChart(chartName, xName, yName, roiData, PlotOrientation.VERTICAL, true, true, false);
 
         XYPlot plot = chart.getXYPlot();
+
         XYLineAndShapeRenderer renderer = (XYLineAndShapeRenderer) plot.getRenderer();
         renderer.setBaseShapesVisible(true);
+
 //        NumberFormat currency = NumberFormat.getCurrencyInstance();
 //        currency.setMaximumFractionDigits(0);
 //        NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
@@ -140,8 +142,9 @@ public class TablePanel extends JPanel {
     private XYDataset createDataset() {
         XYSeriesCollection dataset = new XYSeriesCollection();
         float timeOffset = mainWindow.experimentSettings.experimentDelay/(float)1000;
+        int k = 1;
         for (Experiment experiment : survey.experimentList) {
-            XYSeries series = new XYSeries(experiment.name);
+            XYSeries series = new XYSeries(k + ". " +experiment.name);
             System.out.println(chartDataType);
             if (chartDataType.equals("ram")) {
                 for (int i = 0; i < experiment.ramUsageList.size(); i++) {
@@ -165,6 +168,7 @@ public class TablePanel extends JPanel {
                 }
             }
             dataset.addSeries(series);
+            k++;
         }
         return dataset;
     }

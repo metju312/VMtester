@@ -16,13 +16,13 @@ public class ExperimentSettings {
     public ExperimentSettings() {
         this.experimentCount = 10;
         this.experimentDelay = 500;
-        cpuMixer = 1000d;
+        cpuMixer = 1d;
         cpuMixerLessBetter = false;
-        ramMixer = 10d;
+        ramMixer = 1d/1000;
         ramMixerLessBetter = false;
-        rxMixer = 1d;
+        rxMixer = 1d/10;
         rxMixerLessBetter = false;
-        txMixer = 1d;
+        txMixer = 1d/10;
         txMixerLessBetter = false;
     }
 
