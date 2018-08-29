@@ -205,10 +205,9 @@ public class ExperimentPanel extends TitledBorderPanel {
     }
 
     private void generateScriptFile(String scriptName) {
-        //TODO remove
-        //experiment.guestIp = "192.168.1.26";
-
         StringBuilder sb = new StringBuilder();
+        //TODO remove
+        experiment.guestIp = "192.168.1.12";
 
         //send program.jar
         sb.append("call echo y | pscp -pw 1qazcde3 \"");
@@ -237,12 +236,13 @@ public class ExperimentPanel extends TitledBorderPanel {
         ProcessFinder processFinder = new ProcessFinder(sigar);
         experiment.ramUsageList = new ArrayList<Integer>();
         experiment.cpuUsageList = new ArrayList<Double>();
-        for(int j = 0; j <= 10; j++){
+        for(int j = 0; j <= mainWindow.experimentSettings.experimentCount; j++){
             Shell.clearScreen();
             String cpuPerc="?";
             java.util.List info;
 //            long pid = processFinder.findSingleProcess("Exe.Name.ct=" + processName);
-            long pid = experiment.processPID;
+//            long pid = experiment.processPID; //TODO uncomment
+            long pid = 8108;
             System.out.println(pid);
             info= Ps.getInfo(sigar,pid);
             ProcCpu cpu=sigar.getProcCpu(pid);
@@ -266,7 +266,7 @@ public class ExperimentPanel extends TitledBorderPanel {
             System.out.println("RAM getResident: "+ sigar.getProcMem(pid).getResident());
             System.out.println("RAM getShare: "+ sigar.getProcMem(pid).getShare());
 
-            Thread.sleep(500);
+            Thread.sleep(mainWindow.experimentSettings.experimentDelay);
         }
         endExperiment();
     }

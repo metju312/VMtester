@@ -1,6 +1,7 @@
 package view;
 
 import controller.Experiment;
+import controller.ExperimentSettings;
 import controller.util.FileUtils;
 import controller.util.Survey;
 import net.miginfocom.swing.MigLayout;
@@ -29,8 +30,9 @@ public class MainWindow extends JFrame {
     private FooterPanel footerPanel = new FooterPanel();
     public ProgramPanel programPanel = new ProgramPanel("Badany program", JARS_PATH);
     private JScrollPane programScrollPane = new JScrollPane(programPanel);
+    public ExperimentSettings experimentSettings = new ExperimentSettings();
 
-    private int mainWindowWidth = 1000;
+    private int mainWindowWidth = 1140;
     private int mainWindowHeight = 730;
 
 
@@ -87,7 +89,7 @@ public class MainWindow extends JFrame {
                 tablePanel.refreshPanel(surveyPanel.survey);
             }
         });
-        JMenuItem openTest = new JMenuItem("Otwórz badanie", openIcon);
+        JMenuItem openTest = new JMenuItem("Wczytaj badanie", openIcon);
         openTest.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 JFileChooser fileChooser = new JFileChooser(SURVEY_PATH);
@@ -109,6 +111,11 @@ public class MainWindow extends JFrame {
             }
         });
         JMenuItem settings = new JMenuItem("Ustawienia", settingsIcon);
+        settings.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                SettingsFrame settingsFrame = new SettingsFrame(instance);
+            }
+        });
         JMenuItem exit = new JMenuItem("Wyjdź", exitIcon);
         JMenuItem newExperiment = new JMenuItem("Nowy eksperyment");
         newExperiment.addActionListener(new ActionListener() {
