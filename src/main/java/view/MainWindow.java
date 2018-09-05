@@ -163,6 +163,7 @@ public class MainWindow extends JFrame {
     private void importSurvey(File file) {
         Survey survey = FileUtils.importSurveyFromFile(file);
         surveyPanel.importSurvey(survey);
+        refreshTable();
     }
 
     private void setMainWindowValues() {

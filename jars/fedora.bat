@@ -1,0 +1,2 @@
+call echo y | pscp -pw 1qazcde3 "C:\Users\Matthew\mgr\ram-usage-program.jar" liveuser@192.168.43.118:/home/liveuser/program.jar
+call plink liveuser@192.168.43.118 -pw 1qazcde3 -m "C:\Users\Matthew\mgr\fedoraCommands.txt"

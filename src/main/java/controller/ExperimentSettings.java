@@ -14,7 +14,7 @@ public class ExperimentSettings {
     public boolean txMixerLessBetter;
 
     public ExperimentSettings() {
-        this.experimentCount = 10;
+        this.experimentCount = 30;
         this.experimentDelay = 500;
         cpuMixer = 1d;
         cpuMixerLessBetter = false;

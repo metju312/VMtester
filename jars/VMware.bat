@@ -1,0 +1,2 @@
+call echo y | pscp -pw 1qazcde3 "C:\Magister\VMtester\jars\benchmark.jar" liveuser@192.168.87.130:/home/liveuser/program.jar
+call plink liveuser@192.168.87.130 -pw 1qazcde3 -m "C:\Magister\VMtester\jars\callProgramJar.txt"
