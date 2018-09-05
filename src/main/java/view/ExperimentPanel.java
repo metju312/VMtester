@@ -199,21 +199,14 @@ public class ExperimentPanel extends TitledBorderPanel {
         Runtime rt = Runtime.getRuntime();
         File file = new File("jars/"+experiment.methodName+".bat");
         System.out.println("jars/"+experiment.methodName+".bat");
-        //można to ominąć i podać skrypt z konkretnego pliku
-        //String[] commands = {"C:\\Users\\Matthew\\mgr\\fedora.bat"};
         String[] commands = {file.getAbsolutePath()};
         rt.exec(commands);
     }
 
     private void generateScriptFile(String scriptName) {
         StringBuilder sb = new StringBuilder();
-        //TODO remove
-//        experiment.guestIp = "192.168.1.12";
         System.out.println("experiment.guestIp: " + experiment.guestIp);
         System.out.println("experiment.programExeName:" + experiment.programExeName);
-//        if(experiment.programExeName.equals("VMware.exe"))experiment.guestIp = "192.168.87.129";
-
-        //send program.jar
         sb.append("call echo y | pscp -pw 1qazcde3 \"");
         sb.append(mainWindow.programPanel.program.path);
         sb.append("\" liveuser@");
@@ -247,13 +240,8 @@ public class ExperimentPanel extends TitledBorderPanel {
             Shell.clearScreen();
             String cpuPerc="?";
             java.util.List info;
-//            long pid = processFinder.findSingleProcess("Exe.Name.ct=" + processName);
-            long pid = experiment.processPID; //TODO uncomment
+            long pid = experiment.processPID;
             System.out.println("pid: " + pid);
-
-//            long pid = 13376;
-//            if(experiment.programExeName.equals("VMware.exe"))pid = 4980;
-
             System.out.println(pid);
             info= Ps.getInfo(sigar,pid);
             ProcCpu cpu=sigar.getProcCpu(pid);
@@ -263,7 +251,6 @@ public class ExperimentPanel extends TitledBorderPanel {
 
             //CPU percentage
             double cpuResult = cpu.getPercent()*10;
-            if(experiment.programExeName.equals("QEMU.exe"))cpuResult = cpuResult*0.7;
             experiment.cpuUsageList.add(cpuResult);
             System.out.println("CPU percentage: "+ experiment.cpuUsageList.get(experiment.cpuUsageList.size()-1));
 
@@ -271,7 +258,6 @@ public class ExperimentPanel extends TitledBorderPanel {
 
             //RAM memory
             double ramResult = (double) (sigar.getProcMem(pid).getSize()/(double)1038336);
-            if(experiment.programExeName.equals("QEMU.exe"))ramResult = ramResult*0.7;
             experiment.ramUsageList.add(ramResult);
 
             //mem
@@ -309,10 +295,8 @@ public class ExperimentPanel extends TitledBorderPanel {
             rxCurrenttmpSum = (rxCurrenttmpSum - rxToSubtract)/1000;
             txCurrenttmpSum = (txCurrenttmpSum - txToSubtract)/1000;
             double rxResult = (double) (rxCurrenttmpSum);
-            if(experiment.programExeName.equals("QEMU.exe"))rxResult = rxResult*0.7;
             experiment.rxBytesList.add(rxResult);
             double txResult = (double) (txCurrenttmpSum);
-            if(experiment.programExeName.equals("QEMU.exe"))txResult = txResult*0.7;
             experiment.txBytesList.add(txResult);
 
             System.out.println(rxCurrenttmpSum);
